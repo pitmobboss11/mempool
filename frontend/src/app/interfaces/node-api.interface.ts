@@ -301,3 +301,14 @@ export interface INode {
   funding_balance?: number;
   closing_balance?: number;
 }
+
+export interface Acceleration {
+  txid: string,
+  fee: number,
+  feeDelta: number,
+  mined: boolean,
+  canceled: boolean,
+  pool?: number,
+  block_hash?: string,
+  block_height?: number,
+}

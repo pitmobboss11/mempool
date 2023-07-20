@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { CpfpInfo, OptimizedMempoolStats, AddressInformation, LiquidPegs, ITranslators,
-  PoolStat, BlockExtended, TransactionStripped, RewardStats, AuditScore, BlockSizesAndWeights, RbfTree, BlockAudit } from '../interfaces/node-api.interface';
+  PoolStat, BlockExtended, TransactionStripped, RewardStats, AuditScore, BlockSizesAndWeights, RbfTree, BlockAudit, Acceleration } from '../interfaces/node-api.interface';
 import { Observable, of } from 'rxjs';
 import { StateService } from './state.service';
 import { IBackendInfo, WebsocketResponse } from '../interfaces/websocket.interface';
@@ -389,5 +389,9 @@ export class ApiService {
 
   accelerate$(txInput: string, userBid: number) {
     return this.httpClient.post<any>(`${SERVICES_API_PREFIX}/accelerator/accelerate`, { txInput: txInput, userBid: userBid });
+  }
+
+  getAccelerations$(): Observable<Acceleration[]> {
+    return this.httpClient.get<Acceleration[]>(`${SERVICES_API_PREFIX}/accelerations`);
   }
 }
