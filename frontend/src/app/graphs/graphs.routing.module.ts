@@ -25,6 +25,7 @@ import { NodesPerISPChartComponent } from '../lightning/nodes-per-isp-chart/node
 import { NodesPerCountryChartComponent } from '../lightning/nodes-per-country-chart/nodes-per-country-chart.component';
 import { NodesMap } from '../lightning/nodes-map/nodes-map.component';
 import { NodesChannelsMap } from '../lightning/nodes-channels-map/nodes-channels-map.component';
+import { AccelerationFeesGraphComponent } from '../components/acceleration-fees-graph/acceleration-fees-graph.component';
 
 const browserWindow = window || {};
 // @ts-ignore
@@ -118,6 +119,11 @@ const routes: Routes = [
             path: 'mining/block-sizes-weights',
             data: { networks: ['bitcoin'] },
             component: BlockSizesWeightsGraphComponent,
+          },
+          {
+            path: 'acceleration/fees',
+            data: { networks: ['bitcoin'] },
+            component: AccelerationFeesGraphComponent,
           },
           {
             path: 'lightning/nodes-networks',
