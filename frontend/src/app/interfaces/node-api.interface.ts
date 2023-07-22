@@ -303,12 +303,13 @@ export interface INode {
 }
 
 export interface Acceleration {
-  txid: string,
-  fee: number,
-  feeDelta: number,
-  mined: boolean,
-  canceled: boolean,
-  pool?: number,
-  block_hash?: string,
-  block_height?: number,
+  txid: string;
+  status: 'completed' | 'accelerating' | 'mined' | 'failed';
+  feePaid: number;
+  added: number; // time request received
+  lastUpdated: number; // time status changed
+  pools: number[];
+  baseFee: number;
+  feeDelta: number;
+  blockHash: string;
 }
