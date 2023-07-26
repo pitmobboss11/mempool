@@ -306,10 +306,11 @@ export interface Acceleration {
   txid: string;
   status: 'completed' | 'accelerating' | 'mined' | 'failed';
   feePaid: number;
-  added: number; // time request received
-  lastUpdated: number; // time status changed
-  pools: number[];
-  baseFee: number;
   feeDelta: number;
-  blockHash: string;
+  baseFee?: number;
+  added?: number; // time request received
+  lastUpdated?: number; // time status changed
+  pools?: number[];
+  blockHash?: string;
+  blockHeight?: number;
 }
