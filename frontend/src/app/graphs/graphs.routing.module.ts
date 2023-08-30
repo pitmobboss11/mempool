@@ -26,6 +26,7 @@ import { NodesPerCountryChartComponent } from '../lightning/nodes-per-country-ch
 import { NodesMap } from '../lightning/nodes-map/nodes-map.component';
 import { NodesChannelsMap } from '../lightning/nodes-channels-map/nodes-channels-map.component';
 import { AccelerationFeesGraphComponent } from '../components/acceleration-fees-graph/acceleration-fees-graph.component';
+import { AccelerationsListComponent } from '../components/accelerations-list/accelerations-list.component';
 
 const browserWindow = window || {};
 // @ts-ignore
@@ -63,6 +64,11 @@ const routes: Routes = [
             component: AcceleratorDashboardComponent,
           }
         ]
+      },
+      {
+        path: 'acceleration-list',
+        data: { networks: ['bitcoin'] },
+        component: AccelerationsListComponent,
       },
       {
         path: 'mempool-block/:id',
