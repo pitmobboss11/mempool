@@ -67,13 +67,15 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
   }
 
   ngAfterViewInit(): void {
-    this.canvas.nativeElement.addEventListener('webglcontextlost', this.handleContextLost, false);
-    this.canvas.nativeElement.addEventListener('webglcontextrestored', this.handleContextRestored, false);
-    this.gl = this.canvas.nativeElement.getContext('webgl');
+    if (this.canvas) {
+      this.canvas.nativeElement.addEventListener('webglcontextlost', this.handleContextLost, false);
+      this.canvas.nativeElement.addEventListener('webglcontextrestored', this.handleContextRestored, false);
+      this.gl = this.canvas.nativeElement.getContext('webgl');
 
-    if (this.gl) {
-      this.initCanvas();
-      this.resizeCanvas();
+      if (this.gl) {
+        this.initCanvas();
+        this.resizeCanvas();
+      }
     }
   }
 
@@ -96,8 +98,10 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
       cancelAnimationFrame(this.animationFrameRequest);
       clearTimeout(this.animationHeartBeat);
     }
-    this.canvas.nativeElement.removeEventListener('webglcontextlost', this.handleContextLost);
-    this.canvas.nativeElement.removeEventListener('webglcontextrestored', this.handleContextRestored);
+    if (this.canvas) {
+      this.canvas.nativeElement.removeEventListener('webglcontextlost', this.handleContextLost);
+      this.canvas.nativeElement.removeEventListener('webglcontextrestored', this.handleContextRestored);
+    }
   }
 
   clear(direction): void {
@@ -158,6 +162,10 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
   }
 
   initCanvas(): void {
+    if (!this.canvas || !this.gl) {
+      return;
+    }
+
     this.gl.clearColor(0.0, 0.0, 0.0, 0.0);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
@@ -211,23 +219,25 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
 
   @HostListener('window:resize', ['$event'])
   resizeCanvas(): void {
-    this.cssWidth = this.canvas.nativeElement.offsetParent.clientWidth;
-    this.cssHeight = this.canvas.nativeElement.offsetParent.clientHeight;
-    this.displayWidth = window.devicePixelRatio * this.cssWidth;
-    this.displayHeight = window.devicePixelRatio * this.cssHeight;
-    this.canvas.nativeElement.width = this.displayWidth;
-    this.canvas.nativeElement.height = this.displayHeight;
-    if (this.gl) {
-      this.gl.viewport(0, 0, this.displayWidth, this.displayHeight);
-    }
-    if (this.scene) {
-      this.scene.resize({ width: this.displayWidth, height: this.displayHeight, animate: false });
-      this.start();
-    } else {
-      this.scene = new BlockScene({ width: this.displayWidth, height: this.displayHeight, resolution: this.resolution,
-        blockLimit: this.blockLimit, orientation: this.orientation, flip: this.flip, vertexArray: this.vertexArray,
-        highlighting: this.auditHighlighting });
-      this.start();
+    if (this.canvas) {
+      this.cssWidth = this.canvas.nativeElement.offsetParent.clientWidth;
+      this.cssHeight = this.canvas.nativeElement.offsetParent.clientHeight;
+      this.displayWidth = window.devicePixelRatio * this.cssWidth;
+      this.displayHeight = window.devicePixelRatio * this.cssHeight;
+      this.canvas.nativeElement.width = this.displayWidth;
+      this.canvas.nativeElement.height = this.displayHeight;
+      if (this.gl) {
+        this.gl.viewport(0, 0, this.displayWidth, this.displayHeight);
+      }
+      if (this.scene) {
+        this.scene.resize({ width: this.displayWidth, height: this.displayHeight, animate: false });
+        this.start();
+      } else {
+        this.scene = new BlockScene({ width: this.displayWidth, height: this.displayHeight, resolution: this.resolution,
+          blockLimit: this.blockLimit, orientation: this.orientation, flip: this.flip, vertexArray: this.vertexArray,
+          highlighting: this.auditHighlighting });
+        this.start();
+      }
     }
   }
 
@@ -354,6 +364,9 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
 
   @HostListener('pointerup', ['$event'])
   onClick(event) {
+    if (!this.canvas) {
+      return;
+    }
     if (event.target === this.canvas.nativeElement && event.pointerType === 'touch') {
       this.setPreviewTx(event.offsetX, event.offsetY, true);
     } else if (event.target === this.canvas.nativeElement) {
@@ -365,6 +378,9 @@ export class BlockOverviewGraphComponent implements AfterViewInit, OnDestroy, On
 
   @HostListener('pointermove', ['$event'])
   onPointerMove(event) {
+    if (!this.canvas) {
+      return;
+    }
     if (event.target === this.canvas.nativeElement) {
       this.setPreviewTx(event.offsetX, event.offsetY, false);
     }
