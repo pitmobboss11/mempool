@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, ViewChild, ElementRef, Inject, ChangeDetectorRef } from '@angular/core';
 import { ElectrsApiService } from '../../services/electrs-api.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
@@ -26,6 +26,7 @@ import { LiquidUnblinding } from './liquid-ublinding';
 import { RelativeUrlPipe } from '../../shared/pipes/relative-url/relative-url.pipe';
 import { Price, PriceService } from '../../services/price.service';
 import { isFeatureActive } from '../../bitcoin.utils';
+import { ZONE_SERVICE } from '../../injection-tokens';
 
 @Component({
   selector: 'app-transaction',
@@ -73,7 +74,7 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
   inputIndex: number;
   outputIndex: number;
   graphExpanded: boolean = false;
-  graphWidth: number = 1000;
+  graphWidth: number = 1068;
   graphHeight: number = 360;
   inOutLimit: number = 150;
   maxInOut: number = 0;
@@ -110,7 +111,9 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
     private apiService: ApiService,
     private seoService: SeoService,
     private priceService: PriceService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private cd: ChangeDetectorRef,
+    @Inject(ZONE_SERVICE) private zoneService: any,
   ) {}
 
   ngOnInit() {
@@ -256,7 +259,7 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    this.subscription = this.route.paramMap
+    this.subscription = this.zoneService.wrapObservable(this.route.paramMap
       .pipe(
         switchMap((params: ParamMap) => {
           const urlMatch = (params.get('id') || '').split(':');
@@ -328,7 +331,7 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           return of(tx);
         })
-      )
+      ))
       .subscribe((tx: Transaction) => {
           if (!tx) {
             this.fetchCachedTx$.next(this.txId);
@@ -393,6 +396,8 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
           ).subscribe();
 
           setTimeout(() => { this.applyFragment(); }, 0);
+
+          this.cd.detectChanges();
         },
         (error) => {
           this.error = error;
@@ -630,9 +635,9 @@ export class TransactionComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   setGraphSize(): void {
     this.isMobile = window.innerWidth < 850;
-    if (this.graphContainer?.nativeElement) {
+    if (this.graphContainer?.nativeElement && this.stateService.isBrowser) {
       setTimeout(() => {
-        if (this.graphContainer?.nativeElement) {
+        if (this.graphContainer?.nativeElement?.clientWidth) {
           this.graphWidth = this.graphContainer.nativeElement.clientWidth;
         } else {
           setTimeout(() => { this.setGraphSize(); }, 1);
