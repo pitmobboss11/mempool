@@ -38,6 +38,7 @@ import { LanguageSelectorComponent } from '../components/language-selector/langu
 import { FiatSelectorComponent } from '../components/fiat-selector/fiat-selector.component';
 import { RateUnitSelectorComponent } from '../components/rate-unit-selector/rate-unit-selector.component';
 import { BrowserOnlyDirective } from './directives/browser-only.directive';
+import { ServerOnlyDirective } from './directives/server-only.directive';
 import { ColoredPriceDirective } from './directives/colored-price.directive';
 import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 import { MempoolBlocksComponent } from '../components/mempool-blocks/mempool-blocks.component';
@@ -135,6 +136,7 @@ import { OnlyVsizeDirective, OnlyWeightDirective } from './components/weight-dir
     FiatCurrencyPipe,
     ColoredPriceDirective,
     BrowserOnlyDirective,
+    ServerOnlyDirective,
     BlockchainComponent,
     MempoolBlocksComponent,
     BlockchainBlocksComponent,
@@ -266,6 +268,7 @@ import { OnlyVsizeDirective, OnlyWeightDirective } from './components/weight-dir
     FeeRoundingPipe,
     ColoredPriceDirective,
     BrowserOnlyDirective,
+    ServerOnlyDirective,
     NoSanitizePipe,
     BlockchainComponent,
     MempoolBlocksComponent,
