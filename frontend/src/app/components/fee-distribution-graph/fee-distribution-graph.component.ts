@@ -34,7 +34,7 @@ export class FeeDistributionGraphComponent implements OnInit, OnChanges, OnDestr
   };
 
   constructor(
-    private stateService: StateService,
+    public stateService: StateService,
     private vbytesPipe: VbytesPipe,
   ) { }
 
