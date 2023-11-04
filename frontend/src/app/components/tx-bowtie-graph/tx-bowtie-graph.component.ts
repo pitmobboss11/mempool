@@ -99,7 +99,7 @@ export class TxBowtieGraphComponent implements OnInit, OnChanges {
   constructor(
     private router: Router,
     private relativeUrlPipe: RelativeUrlPipe,
-    private stateService: StateService,
+    public stateService: StateService,
     private apiService: ApiService,
     private assetsService: AssetsService,
     @Inject(LOCALE_ID) private locale: string,
