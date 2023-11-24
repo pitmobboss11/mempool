@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { SeoService } from './seo.service';
 import { StateService } from './state.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class EnterpriseService {
     private apiService: ApiService,
     private seoService: SeoService,
     private stateService: StateService,
+    private activatedRoute: ActivatedRoute,
   ) {
     const subdomain = this.document.location.hostname.indexOf(this.exclusiveHostName) > -1
       && this.document.location.hostname.split(this.exclusiveHostName)[0] || false;
@@ -90,6 +92,8 @@ export class EnterpriseService {
 
     // @ts-ignore
     const _paq = window._paq = window._paq || [];
+    _paq.push(['setDocumentTitle', this.seoService.getTitle()]);
+    _paq.push(['setCustomUrl', this.getCustomUrl()]);
     _paq.push(['disableCookies']);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
@@ -99,5 +103,18 @@ export class EnterpriseService {
       const d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
       g.type='text/javascript'; g.async=true; g.src=statsUrl+'m.js'; s.parentNode.insertBefore(g,s);
     })();
+  }
+
+  private getCustomUrl(): string {
+    let url = window.location.origin + '/';
+    let route = this.activatedRoute;
+    while (route) {
+      const segment = route?.routeConfig?.path;
+      if (segment && segment.length) {
+        url += segment + '/';
+      }
+      route = route.firstChild;
+    }
+    return url;
   }
 }
